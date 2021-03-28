@@ -3,6 +3,6 @@ def sum_divisible(x,y,z):
     for number in range(x,y+1):
         if number % z == 0:
             result+=number
-    print(result)
+    return result
 
-sum_divisible(1,16,4)
+print(sum_divisible(1,16,4))
