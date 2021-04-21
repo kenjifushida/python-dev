@@ -1,0 +1,71 @@
+import random
+from collections import deque, defaultdict
+
+ctime = 0
+customer = (0, 0) #customer no 0 coming at time 0
+
+queue = deque()
+
+servers = [ None, None, None, None ]
+
+serviced = defaultdict(list)
+
+while ctime < 100:
+
+    # if the current time is at a customer coming time,
+    # add the customer to the queue
+    # generate a future customer event
+    if ctime == customer[1]:
+        queue.append(customer)
+        customer = (customer[0]+1, ctime + random.randint(1, 25))
+
+    for n in range(4):
+        if servers[n]:
+            if ctime == servers[n][2]: # the current time is the service finish time
+                serviced[n].append(servers[n])
+
+    for n in range(4):
+        if queue and not servers[n]:
+            service_customer = queue.pop()
+            servers[n] = (service_customer, ctime, ctime + random.randint(1, 100))
+
+    ctime += 1
+
+print(queue)
+print(servers)
+print(serviced)
+
+def service_simulator(sim_time, arrive_time, service_time, server_num, seed_num):
+    """Simulate the service"""
+    ctime = 0
+    customer = (0, 0) #customer no 0 coming at time 0
+
+    queue = deque()
+
+    server = []
+    for server in range(server_num):
+        server.append(None)
+
+    serviced = defaultdict(list)
+
+    while ctime < sim_time:
+        random.seed(seed_num)
+
+        # if the current time is at a customer coming time,
+        # add the customer to the queue
+        # generate a future customer event
+        if ctime == customer[1]:
+            queue.append(customer)
+            customer = (customer[0]+1, ctime + random.randint(1, 25))
+
+        for n in range(server_num):
+            if servers[n]:
+                if ctime == servers[n][2]: # the current time is the service finish time
+                    serviced[n].append(servers[n])
+
+        for n in range(server_num):
+            if queue and not servers[n]:
+                service_customer = queue.pop()
+                servers[n] = (service_customer, ctime, ctime + random.randint(1, 100))
+
+        ctime += 1
